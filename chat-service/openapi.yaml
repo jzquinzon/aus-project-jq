@@ -1,0 +1,145 @@
+openapi: 3.0.3
+info:
+  title: ChatService API
+  version: 0.1.0
+  description: Contract for session, message, and streaming chat interactions.
+
+servers:
+  - url: http://localhost:8080
+    description: dev
+
+tags:
+  - name: Chat
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    SessionId:
+      in: query
+      name: sessionId
+      required: true
+      schema: { type: string }
+      description: Conversation/session identifier.
+
+  schemas:
+    ChatRequest:
+      type: object
+      required: [sessionId, content]
+      additionalProperties: false
+      properties:
+        sessionId: { type: string, example: "abc123" }
+        content:   { type: string, example: "Summarize this article" }
+        settings:
+          type: object
+          additionalProperties: false
+          properties:
+            model: { type: string, example: "gpt-4-turbo" }
+            temperature: { type: number, minimum: 0, maximum: 2, example: 0.7 }
+
+    Ack:
+      type: object
+      properties:
+        ack: { type: boolean, example: true }
+
+    Error:
+      type: object
+      required: [code, error]
+      properties:
+        code:   { type: integer, example: 401 }
+        error:  { type: string,  example: "Unauthorized" }
+        message:{ type: string,  example: "Missing or invalid token." }
+        details:
+          type: object
+          additionalProperties: true
+
+  responses:
+    UnauthorizedError:
+      description: Unauthorized
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          examples:
+            default:
+              value: { code: 401, error: "Unauthorized", message: "Missing or invalid token." }
+
+    RateLimitError:
+      description: Too Many Requests
+      headers:
+        Retry-After:
+          description: Seconds to wait before retrying
+          schema: { type: integer, example: 30 }
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+          examples:
+            default:
+              value: { code: 429, error: "Rate limit exceeded", message: "Try again later." }
+
+paths:
+  /chat:
+    post:
+      tags: [Chat]
+      summary: Send a user message to a chat session
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ChatRequest" }
+            examples:
+              default:
+                value:
+                  sessionId: "abc123"
+                  content: "Summarize this article"
+                  settings:
+                    model: "gpt-4-turbo"
+                    temperature: 0.7
+      responses:
+        "200":
+          description: Acknowledged; read streamed response from /chat/stream
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Ack" }
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "429":
+          $ref: "#/components/responses/RateLimitError"
+
+  /chat/stream:
+    get:
+      tags: [Chat]
+      summary: Response stream via Server-Sent Events (SSE)
+      description: |
+        Opens a long-lived SSE connection (`text/event-stream`).
+        Emits JSON frames like:
+          {"type":"delta","delta":"Hello"}
+          {"type":"delta","delta":" world"}
+          {"type":"done"}
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - $ref: "#/components/parameters/SessionId"
+      responses:
+        "200":
+          description: text/event-stream of chat output
+          content:
+            text/event-stream:
+              schema:
+                type: string
+              examples:
+                sample:
+                  summary: Example SSE stream (conceptual)
+                  value: |
+                    data: {"type":"delta","delta":"Hello"}
+
+                    data: {"type":"delta","delta":" world"}
+
+                    data: {"type":"done"}
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "429":
+          $ref: "#/components/responses/RateLimitError"
