@@ -44,7 +44,8 @@ components:
     Ack:
       type: object
       properties:
-        ack: { type: boolean, example: true }
+        messageId: { type: string, example: "msg123" }
+        status: { type: string, example: "acknowledged" }
 
     Error:
       type: object
@@ -105,6 +106,11 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Ack" }
+              examples:
+                default:
+                  value:
+                    messageId: "msg123"
+                    status: "acknowledged"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "429":
