@@ -1,4 +1,4 @@
-package com.aus.project.jq.chat_service.service;\
+package com.aus.project.jq.chat_service.service;
 
 import org.springframework.stereotype.Service;
 import com.aus.project.jq.chat_service.model.ChatRequest;

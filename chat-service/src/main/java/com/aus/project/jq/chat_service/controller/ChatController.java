@@ -1,8 +1,15 @@
 package com.aus.project.jq.chat_service.controller;
 
-import com.aus.project.jq.chat_service.service.ChatService;
-import com.aus.project.jq.chat_service.model.ChatRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.aus.project.jq.chat_service.model.AckResponse;
+import com.aus.project.jq.chat_service.model.ChatRequest;
+import com.aus.project.jq.chat_service.service.ChatService;
 
 
 /**
