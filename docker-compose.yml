@@ -13,3 +13,15 @@ services:
       OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://api.openai.com/v1}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o}
     restart: unless-stopped
+
+  chatbox-gui:
+    build:
+      context: ./chatbox-gui
+      dockerfile: Dockerfile
+    image: aus-project-jq-chatbox-gui:latest
+    container_name: chatbox-gui
+    ports:
+      - "3000:80"
+    depends_on:
+      - chat-service
+    restart: unless-stopped
