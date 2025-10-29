@@ -82,7 +82,7 @@ components:
               value: { code: 429, error: "Rate limit exceeded", message: "Try again later." }
 
 paths:
-  /chat:
+  /chat/message:
     post:
       tags: [Chat]
       summary: Send a user message to a chat session

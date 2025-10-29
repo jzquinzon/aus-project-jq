@@ -20,6 +20,12 @@ services:
       dockerfile: Dockerfile
     image: aus-project-jq-chatbox-gui:latest
     container_name: chatbox-gui
+    environment:
+      # reliable file watching on macOS/Windows
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      # RTK Query base URL
+      - VITE_API_BASE=/api
     ports:
       - "3000:80"
     depends_on:
