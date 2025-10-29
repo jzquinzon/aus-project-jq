@@ -1,4 +1,4 @@
-import Thread from "../components/Chat/Thread";
+import Thread from "../components/Thread";
 
 const ChatPage = () => {
   return (

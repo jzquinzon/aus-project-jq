@@ -1,18 +1,19 @@
-import { Button, ButtonGroup, InputGroup } from 'react-bootstrap';
+import { Button, InputGroup } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
-import { Send, Paperclip, Mic } from 'react-bootstrap-icons';
+import { Send, Paperclip } from 'react-bootstrap-icons';
 import { useState } from 'react';
 
 import './Composer.css';
+import { useAppDispatch } from '../../../../app/hooks';
 
 const Composer = () => {
     const [message, setMessage] = useState('');
+    const dispatch = useAppDispatch();
 
     const handleSend = (e: React.FormEvent) => {
         e.preventDefault();
         if (message.trim()) {
             console.log('Sending message:', message);
-            // Add your send logic here
             setMessage('');
         }
     };

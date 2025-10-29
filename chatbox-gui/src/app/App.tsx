@@ -1,6 +1,6 @@
 import './App.css'
-import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom'
-import ChatPage from './pages/ChatPage'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import ChatPage from '../features/chat/pages/ChatPage'
 
 function App() {
   return (
