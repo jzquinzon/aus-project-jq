@@ -25,7 +25,7 @@ const Composer = () => {
                     content: message,
                 }).unwrap();
 
-                console.log(ack);
+                console.log(ack);//successful
             } catch (error) {
                 console.error('Error sending message:', error);
             }

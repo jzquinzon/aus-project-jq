@@ -1,0 +1,6 @@
+CREATE TABLE conversations (
+    id SERIAL PRIMARY KEY,
+    conversation_id UUID UNIQUE NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+

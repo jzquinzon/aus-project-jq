@@ -16,4 +16,13 @@ export const chatApi = createApi({
     }),
 });
 
+// export const streamApi = createApi({
+//     reducerPath: 'streamApi',
+//     baseQuery: fettchBaseQuery({ baseUrl: import.meta.env.VITE_API_BASE ?? '/api' }),
+//     tagTypes: ['Stream'],
+//     endpoints: (builder) => ({
+//         getStream: builder.query<StreamResponse, StreamRequest>({
+
+// }) NICE TO HAVE
+
 export const { usePostMessageMutation } = chatApi;

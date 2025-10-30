@@ -12,7 +12,33 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://api.openai.com/v1}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:postgresql://chat-db:5432/chatdb}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-chatuser}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-chatpassword}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate # Was 'update'
+      SPRING_JPA_SHOW_SQL: true
     restart: unless-stopped
+
+    depends_on:
+      chat-db:
+        condition: service_healthy
+  
+  chat-db:
+    image: postgres:15 # Use a specific version, e.g., postgres:15 or postgres:latest
+    container_name: chat-db
+    environment:
+      - POSTGRES_USER=chatuser
+      - POSTGRES_PASSWORD=chatpassword
+      - POSTGRES_DB=chatdb # This will auto-create the database
+    # volumes:
+    #   - chat-db-data:/var/lib/postgresql/data # Persists data
+    ports:
+      - "5433:5432" # Map to 5433 on your host to avoid conflicts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U chatuser -d chatdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   chatbox-gui:
     build:
