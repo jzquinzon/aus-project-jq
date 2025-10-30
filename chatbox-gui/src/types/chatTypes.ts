@@ -16,9 +16,3 @@ export interface ChatRequest {
     temperature?: number
   }
 }
-
-// Acknowledgment returned by the backend when a message is accepted
-export interface Ack {
-  messageId: string
-  status: string
-}

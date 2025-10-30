@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { Ack, ChatRequest } from '../types/chatTypes';
+import type { ChatRequest } from '../types/chatTypes';
+import type { Ack } from '../types/commonTypes';
 
 export const chatApi = createApi({
     reducerPath: 'chatApi',

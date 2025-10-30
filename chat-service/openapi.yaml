@@ -10,6 +10,7 @@ servers:
 
 tags:
   - name: Chat
+  - name: Conversation
 
 components:
   securitySchemes:
@@ -57,6 +58,14 @@ components:
         details:
           type: object
           additionalProperties: true
+    
+    Conversation:
+      type: object
+      properties:
+        id: {type: integer, example: 1 }
+        conversationId: { type: string, example: "550e8400-e29b-41d4-a716-446655440000" }
+        createdAt: { type: string, format: date-time, example: "2024-01-01T12:00:00Z" }
+        updatedAt: { type: string, format: date-time, example: "2024-01-01T12:05:00Z" }
 
   responses:
     UnauthorizedError:
@@ -145,6 +154,39 @@ paths:
                     data: {"type":"delta","delta":" world"}
 
                     data: {"type":"done"}
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "429":
+          $ref: "#/components/responses/RateLimitError"
+  
+  /conversation/create:
+    post:
+      tags: [Conversation]
+      summary: Create a new conversation and store in DB
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/Conversation'}
+            examples:
+              default:
+                value:
+                  conversationId: "550e8400-e29b-41d4-a716-446655440000"
+                  createdAt: "2024-01-01T12:00:00Z"
+                  updatedAt: "2024-01-01T12:05:00Z"
+      
+      responses:
+        "200":
+          description: Conversation created successfully
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Ack" }
+              examples:
+                default:
+                  value:
+                    messageId: "conv123"
+                    status: "created"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "429":
