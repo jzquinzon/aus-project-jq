@@ -14,7 +14,7 @@ import com.aus.project.jq.chat_service.model.Conversation;
 import com.aus.project.jq.chat_service.service.ConversationService;
 
 @RestController
-@RequestMapping("/conversations")
+@RequestMapping("/conversation")
 public class ConversationController {
 
     private final ConversationService conversationService;
@@ -36,7 +36,7 @@ public class ConversationController {
     }
 
     // Get all conversations
-    @GetMapping("/conversations")
+    @GetMapping("/conversation/all")
     public Optional<List<Conversation>> getAllConversations() {
         return conversationService.getAllConversations();
     }
